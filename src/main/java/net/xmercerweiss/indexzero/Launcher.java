@@ -1,7 +1,5 @@
 package net.xmercerweiss.indexzero;
 
-import java.io.IOException;
-
 import net.xmercerweiss.indexzero.events.*;
 import net.xmercerweiss.indexzero.ui.UserInterface;
 
