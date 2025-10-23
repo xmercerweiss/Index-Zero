@@ -8,9 +8,4 @@ public class Transaction
   {
     AMOUNT = cents;
   }
-
-  public Transaction(long cents)
-  {
-    AMOUNT = new Cents(cents);
-  }
 }
