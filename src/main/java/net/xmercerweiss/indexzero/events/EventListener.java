@@ -1,6 +1,14 @@
 package net.xmercerweiss.indexzero.events;
 
-public interface EventListener
+
+public abstract class EventListener
 {
-  void listen(Event e);
+  abstract public void signal(Event e);
+
+  public void subscribe(Event... events)
+  {
+    for (Event e : events)
+      EventManager.addSubscriber(this, e);
+  }
+
 }

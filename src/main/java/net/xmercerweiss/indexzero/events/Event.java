@@ -1,6 +1,8 @@
 package net.xmercerweiss.indexzero.events;
 
+
 public enum Event
 {
-  LAUNCH_APP
+  APP_LAUNCH,
+  APP_CLOSE
 }

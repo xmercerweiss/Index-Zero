@@ -1,35 +1,38 @@
 package net.xmercerweiss.indexzero.events;
 
 import java.util.LinkedList;
+import java.util.HashMap;
 
 
 public class EventManager
 {
-  private static EventManager instance = null;
+  private static final HashMap<Event,LinkedList<EventListener>>
+    SUBSCRIBERS = new HashMap<>();
 
-  private static final LinkedList<EventListener> SUBSCRIBERS =
-    new LinkedList<>();
-
-  public static EventManager getInstance()
-  {
-    if (instance == null)
-      instance = new EventManager();
-    return instance;
+  static {
+    for (Event e : Event.values())
+      SUBSCRIBERS.put(e, new LinkedList<>());
   }
 
-  private EventManager()
+  public static void addSubscriber(EventListener listener, Event e)
   {
-    instance = this;
+    SUBSCRIBERS.get(e)
+      .add(listener);
   }
 
-  public void addSubscriber(EventListener listener)
+  public static void publish(Event e)
   {
-    SUBSCRIBERS.add(listener);
+    for (EventListener subscriber : SUBSCRIBERS.get(e))
+      subscriber.signal(e);
   }
 
-  public void publish(Event e)
+  public static void launchApp()
   {
-    for (EventListener subscriber : SUBSCRIBERS)
-      subscriber.listen(e);
+    publish(Event.APP_LAUNCH);
+  }
+
+  public static void closeApp()
+  {
+    publish(Event.APP_CLOSE);
   }
 }

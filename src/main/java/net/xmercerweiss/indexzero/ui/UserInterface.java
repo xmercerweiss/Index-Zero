@@ -1,60 +1,85 @@
 package net.xmercerweiss.indexzero.ui;
 
-import net.xmercerweiss.indexzero.events.*;
-
-import com.googlecode.lanterna.screen.*;
-import com.googlecode.lanterna.gui2.*;
-import com.googlecode.lanterna.gui2.dialogs.*;
-import com.googlecode.lanterna.terminal.*;
-
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-public class UserInterface implements EventListener
+import com.googlecode.lanterna.*;
+import com.googlecode.lanterna.terminal.*;
+import com.googlecode.lanterna.screen.*;
+import com.googlecode.lanterna.graphics.*;
+import com.googlecode.lanterna.gui2.*;
+
+import net.xmercerweiss.indexzero.events.*;
+import net.xmercerweiss.indexzero.ui.windows.*;
+
+
+public class UserInterface extends EventListener
 {
-  private WindowBasedTextGUI gui = null;
+  private final WindowBasedTextGUI GUI;
+  private final Screen SCREEN;
+
+  private Window mainMenu;
 
   public UserInterface()
   {
+    GUI = initGUI();
+    SCREEN = GUI.getScreen();
+  }
+
+  private WindowBasedTextGUI initGUI()
+  {
+    WindowBasedTextGUI out;
+    DefaultTerminalFactory termFactory = new DefaultTerminalFactory(
+      System.out,
+      System.in,
+      StandardCharsets.UTF_8
+    );
     try
     {
-      Screen screen = new DefaultTerminalFactory().createScreen();
-      gui = new MultiWindowTextGUI(screen);
-      screen.startScreen();
+      Screen screen = termFactory.createScreen();
+      out = new MultiWindowTextGUI(screen);
     }
-    catch (IOException e)
+    catch (Exception exc)
     {
-      throw new RuntimeException(e);
+      out = null;
     }
+    return out;
   }
 
   @Override
-  public void listen(Event e)
+  public void signal(Event e)
   {
-    switch (e)
+    try
     {
-      case LAUNCH_APP:
-        launch();
-        break;
+      switch (e)
+      {
+        case APP_LAUNCH: launch(); break;
+        case APP_CLOSE: close(); break;
+      }
+    }
+    catch (IOException ioe)
+    {
+      throw new RuntimeException(ioe);
     }
   }
 
   private void launch()
+    throws IOException
   {
-    if (gui != null)
-    {
-      MessageDialog window = new MessageDialogBuilder()
-        .setTitle("Index Zero")
-        .setText("Lets do some money-ing!")
-        .build();
-      gui.addWindow(window);
-      try
-      {
-        gui.updateScreen();
-      }
-      catch (IOException e)
-      {
-        throw new RuntimeException(e);
-      }
-    }
+    if (GUI == null)
+     return;
+    SCREEN.startScreen();
+    mainMenu = new MainMenuWindow(
+      SCREEN.getTerminalSize()
+        .withRelative(-6, -5)
+    );
+    GUI.addWindowAndWait(mainMenu);
+  }
+
+  private void close()
+    throws IOException
+  {
+    SCREEN.stopScreen();
+    System.exit(0);
   }
 }
