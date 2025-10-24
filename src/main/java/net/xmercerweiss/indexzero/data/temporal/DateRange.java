@@ -12,6 +12,9 @@ public class DateRange
   private static final String INV_RANGE_ERR_MSG =
     "DateRange start date must come before end date; check arguments?";
 
+  private static final String INV_INTERSECT_ERR_MSG =
+    "DateRange cannot intersect ranges with no overlap; check arguments?";
+
   private static final String INV_DATE_ERR_MSG =
     "DateRange cannot be compared to null; check arguments?";
 
@@ -19,6 +22,22 @@ public class DateRange
   public static DateRange ofOneDay(LocalDate date)
   {
     return new DateRange(date, date.plusDays(1));
+  }
+
+  public static DateRange unionOf(DateRange a, DateRange b)
+  {
+    LocalDate earliestStart = a.START.isBefore(b.START) ? a.START : b.START;
+    LocalDate latestEnd = a.END.isAfter(b.END) ? a.END : b.END;
+    return new DateRange(earliestStart, latestEnd);
+  }
+
+  public static DateRange intersectionOf(DateRange a, DateRange b)
+  {
+    LocalDate latestStart = a.START.isBefore(b.START) ? b.START : a.START;
+    LocalDate earliestEnd = a.END.isAfter(b.END) ? b.END : a.END;
+    if (!latestStart.isBefore(earliestEnd))
+      throw new IllegalArgumentException(INV_INTERSECT_ERR_MSG);
+    return new DateRange(latestStart, earliestEnd);
   }
 
   // Instance Fields

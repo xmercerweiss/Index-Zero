@@ -1,5 +1,6 @@
 package net.xmercerweiss.indexzero.data.monetary;
 
+
 public class Transaction
 {
   private final Cents AMOUNT;
