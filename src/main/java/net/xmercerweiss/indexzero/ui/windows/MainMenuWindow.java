@@ -8,7 +8,7 @@ import net.xmercerweiss.indexzero.events.*;
 
 public class MainMenuWindow extends AbstractWindow
 {
-  protected static final String TITLE = "";
+  protected static final String TITLE = "Main Menu";
 
   public MainMenuWindow()
   {

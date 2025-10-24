@@ -26,11 +26,6 @@ public class Cents implements Comparable<Cents>
     CENTS = cents;
   }
 
-  public Cents(double dollars)
-  {
-    this((long) Math.floor(dollars * IN_DOLLAR));
-  }
-
   // Override Methods
   @Override
   public boolean equals(Object o)
@@ -54,7 +49,7 @@ public class Cents implements Comparable<Cents>
     return this.asCents();
   }
 
-  // Interface
+  // Public Methods
   public String asCents()
   {
     String repr = CENT_FMT.formatted(Math.abs(CENTS));

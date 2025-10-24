@@ -6,7 +6,7 @@ import com.googlecode.lanterna.gui2.*;
 
 public abstract class AbstractWindow extends BasicWindow
 {
-  protected static final String TITLE = "Main Menu";
+  protected static final String TITLE = "";
 
   protected final Panel CONTENT;
 

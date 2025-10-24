@@ -10,13 +10,13 @@ public class DateRange
   public static final LocalDate FOREVER = LocalDate.MAX;
 
   private static final String INV_RANGE_ERR_MSG =
-    "DateRange start date must come before end date; check arguments?";
+    "DateRange start date must come before end date";
 
   private static final String INV_INTERSECT_ERR_MSG =
-    "DateRange cannot intersect ranges with no overlap; check arguments?";
+    "DateRange cannot intersect ranges with no overlap";
 
   private static final String INV_DATE_ERR_MSG =
-    "DateRange cannot be compared to null; check arguments?";
+    "DateRange cannot be compared to null";
 
   // Class Methods
   public static DateRange ofOneDay(LocalDate date)
@@ -65,7 +65,7 @@ public class DateRange
     LENGTH = START.until(END);
   }
 
-  // Public Interface
+  // Public Methods
   public LocalDate startDate()
   {
     return START;
@@ -83,22 +83,26 @@ public class DateRange
 
   public boolean isAfter(LocalDate date)
   {
-    if (date == null)
-      throw new IllegalArgumentException(INV_DATE_ERR_MSG);
+    validateDate(date);
     return date.isBefore(START);
   }
 
   public boolean contains(LocalDate date)
   {
-    if (date == null)
-      throw new IllegalArgumentException(INV_DATE_ERR_MSG);
+    validateDate(date);
     return !date.isBefore(START) && date.isBefore(END);
   }
 
   public boolean isBefore(LocalDate date)
   {
+    validateDate(date);
+    return !date.isBefore(END);
+  }
+
+  // Private Methods
+  private void validateDate(LocalDate date)
+  {
     if (date == null)
       throw new IllegalArgumentException(INV_DATE_ERR_MSG);
-    return !date.isBefore(END);
   }
 }
